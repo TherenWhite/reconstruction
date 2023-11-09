@@ -36,6 +36,8 @@ void loop() {
     singleClick = false;
   }
 
+//Edit to add Close button and Text to Speech
+
   if (doubleClick) {
     // Send a double mouse click event
     Mouse.click(MOUSE_LEFT);
