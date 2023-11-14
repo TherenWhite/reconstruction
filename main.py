@@ -3,41 +3,37 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 import time
-isBrowserOpen = False
-
-
 
 def main():
     driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.get("https://www.google.com/")
-    isBrowserOpen = True
     oldURL = driver.current_url
-    print(oldURL)
-    
-    title = driver.find_element(By.TAG_NAME, "title").get_attribute('textContent')
-    print(f"Title: {title}")
+    print("URL:", oldURL)
+    print_page_content(driver)
 
     try:
         while True:
             time.sleep(1)
-            driver.current_url
             if driver.current_url != oldURL:
                 oldURL = driver.current_url
-                print(oldURL)
-                title = driver.find_element(By.TAG_NAME, "title").get_attribute('textContent')
-                print(f"Title: {title}")
-
-        try:
-            main_article = driver.find_element(By.TAG_NAME, "article").get_attribute('outerHTML')
-            print(f"Main Article: {main_article}")
-        except:
-            print("Main article element not found.")
+                print("URL:", oldURL)
+                print_page_content(driver)
+    except WebDriverException:
+        print("Browser was closed by the user.")
+    finally:
         driver.quit()
 
-    except WebDriverException:
-        isBrowserOpen = False
-        print("Browser was closed by the user.")
+def print_page_content(driver):
+    try:
+        titles = driver.find_elements(By.XPATH, "//h1 | //h2 | //h3 | //h4 | //h5 | //h6")
+        for title in titles:
+            print("Title:", title.text)
 
+        paragraphs = driver.find_elements(By.TAG_NAME, "p")
+        for paragraph in paragraphs:
+            print("Paragraph:", paragraph.text)
+    except Exception as e:
+        print("An error occurred while trying to read the page content:", e)
 
-
-main()
+if __name__ == "__main__":
+    main()
