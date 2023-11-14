@@ -24,6 +24,8 @@ def main():
             if driver.current_url != oldURL:
                 oldURL = driver.current_url
                 print(oldURL)
+                title = driver.find_element(By.TAG_NAME, "title").get_attribute('textContent')
+                print(f"Title: {title}")
 
         try:
             main_article = driver.find_element(By.TAG_NAME, "article").get_attribute('outerHTML')
